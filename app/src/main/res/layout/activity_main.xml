@@ -41,6 +41,7 @@
         android:orientation="vertical">
 
         <Button
+            android:id="@+id/startButton"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:fontFamily="sans-serif-light"
@@ -52,6 +53,7 @@
             android:textStyle="bold" />
 
         <Button
+            android:id="@+id/statsButton"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:fontFamily="sans-serif-light"
