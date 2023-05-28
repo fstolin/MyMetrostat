@@ -17,6 +17,12 @@ import cz.uhk.stolifi1.journey.JourneyActivity
 import cz.uhk.stolifi1.stations.Stations
 import cz.uhk.stolifi1.stations.Stop
 import cz.uhk.stolifi1.utils.APIInterface
+import kotlinx.coroutines.async
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -109,14 +115,43 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this@MainActivity, "Your statistics", Toast.LENGTH_SHORT).show()
     }
 
-    private fun fillDBWithStops(stops: MutableSet<Stop>){
+    private fun fillDBWithStops(stops: MutableSet<Stop>) {
+        var existingMSEs = listOf<MetroStationEntity>()
+        // Get existing Stations
+        lifecycleScope.launch {
+            metroStationDAO.fetchAllMetroStations().collect() {
+                existingMSEs = it
+            }
+        }
+        Log.i(TAG, existingMSEs.toString())
+        // Add each station
         for (stop in stops) {
+            var isDuplicate = false
             val name = stop.altIdosName ?: ""
             val line = ""
             val lat = stop.lat ?: 0.0
             val lon = stop.lon ?: 0.0
-            lifecycleScope.launch {
-                metroStationDAO.insert(MetroStationEntity(name=name, line=line, lat=lat, lon=lon))
+
+            // Check whether stop is a duplicate
+            for (eMse in existingMSEs) {
+                if (eMse.name == name) {
+                    Log.i(TAG, name)
+                    isDuplicate = true
+                    break
+                }
+            }
+            // If it isn't already entered
+            if (!isDuplicate) {
+                lifecycleScope.launch {
+                    metroStationDAO.insert(
+                        MetroStationEntity(
+                            name = name,
+                            line = line,
+                            lat = lat,
+                            lon = lon
+                        )
+                    )
+                }
             }
         }
     }
