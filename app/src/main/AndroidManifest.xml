@@ -17,7 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyMetrostat"
-        tools:targetApi="31" >
+        tools:targetApi="31"
+        android:name=".database.MetroStationApp">
         <activity
             android:name=".miscActivities.JourneysLogActivity"
             android:exported="false" />

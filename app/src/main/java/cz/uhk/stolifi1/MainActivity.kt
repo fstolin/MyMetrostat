@@ -7,11 +7,16 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
+import cz.uhk.stolifi1.database.MetroStationApp
+import cz.uhk.stolifi1.database.MetroStationDAO
+import cz.uhk.stolifi1.database.MetroStationEntity
 import cz.uhk.stolifi1.databinding.ActivityMainBinding
 import cz.uhk.stolifi1.journey.JourneyActivity
 import cz.uhk.stolifi1.stations.Stations
 import cz.uhk.stolifi1.stations.Stop
 import cz.uhk.stolifi1.utils.APIInterface
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private var binding: ActivityMainBinding? = null
     private var metroStationList: MutableSet<Stop> = mutableSetOf()
     private var stationData: Stations? = null
+    private lateinit var metroStationDAO: MetroStationDAO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,9 +44,16 @@ class MainActivity : AppCompatActivity() {
         binding?.startButton?.setOnClickListener { startButton() }
         // Stats button listener
         binding?.statsButton?.setOnClickListener{ statsButton() }
+        // Main image easter egg / station data
         binding?.myMainImage?.setOnClickListener{ createStationsData() }
+        // Metro Station DAO
+        metroStationDAO =  (application as MetroStationApp).db.metroStationDao()
 
+        // TODO only download JSON & update databse when neccesary - once a week - or when requested maybe when the file was changed
+        // JSON request
+        // TODO async
         getJSONData()
+
 
         // Hide buttons (code to remember)
         //binding?.statsButton?.visibility = View.INVISIBLE
@@ -72,6 +85,7 @@ class MainActivity : AppCompatActivity() {
         }
         Toast.makeText(this@MainActivity, "station data created", Toast.LENGTH_SHORT).show()
         printStations()
+        fillDBWithStops(metroStationList)
     }
 
     private fun printStations(){
@@ -90,6 +104,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun statsButton() {
         Toast.makeText(this@MainActivity, "Your statistics", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun fillDBWithStops(stops: MutableSet<Stop>){
+        for (stop in stops) {
+            var name = stop.altIdosName ?: ""
+            var line = ""
+            var lat = stop.lat ?: 0.0
+            var lon = stop.lon ?: 0.0
+            lifecycleScope.launch {
+                metroStationDAO.insert(MetroStationEntity(name=name, line=line, lat=lat, lon=lon))
+            }
+        }
     }
 
     private fun getJSONData() {
