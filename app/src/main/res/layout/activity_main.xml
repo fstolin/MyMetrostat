@@ -26,6 +26,7 @@
         android:gravity="center"/>
 
     <TextView
+        android:id="@+id/defTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -34,11 +35,24 @@
         android:fontFamily="sans-serif-light"
         android:gravity="center"/>
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="bottom"
         android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/failTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:visibility="invisible"
+            android:text="Failed to load stations from endpoint, using oldest sqlite if present."
+            android:textSize="16sp"
+            android:textColor="@color/colorRed"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"/>
 
         <Button
             android:id="@+id/startButton"

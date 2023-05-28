@@ -29,6 +29,8 @@ class JourneyActivity : AppCompatActivity() {
 
         // Handle permissions
         PermissionUtils.handlePermissions(this@JourneyActivity)
+        // Location
+        requestUserLocationData()
 
         // View-binding
         binding = ActivityJourneyBinding.inflate(layoutInflater)
