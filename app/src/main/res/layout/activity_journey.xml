@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:padding="10sp"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:background="@color/colorLightGray">
+
+    <TextView
+        android:id="@+id/testText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Text will be here"
+        android:gravity="center" />
+
+    <Button
+        android:id="@+id/gpsNow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:layout_marginTop="8dp"
+        android:text="Get GPS location"
+        android:padding="15dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        />
+
+</LinearLayout>

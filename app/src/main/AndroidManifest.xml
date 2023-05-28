@@ -13,6 +13,12 @@
         android:theme="@style/Theme.MyMetrostat"
         tools:targetApi="31">
         <activity
+            android:name=".StatsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".JourneyActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

@@ -1,7 +1,9 @@
 package cz.uhk.stolifi1
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import cz.uhk.stolifi1.databinding.ActivityMainBinding
 
@@ -22,13 +24,22 @@ class MainActivity : AppCompatActivity() {
         // stats button listener
         binding?.statsButton?.setOnClickListener{ statsButton() }
 
+        // hide buttons (code to remember)
+        //binding?.statsButton?.visibility = View.INVISIBLE
     }
 
     private fun startButton() {
-        Toast.makeText(this@MainActivity, "Start button pressed", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this, JourneyActivity::class.java)
+        startActivity(intent)
     }
 
     private fun statsButton() {
         Toast.makeText(this@MainActivity, "Your statistics", Toast.LENGTH_SHORT).show()
+    }
+
+    // Unassign view binding
+    override fun onDestroy() {
+        super.onDestroy()
+        binding = null
     }
 }
