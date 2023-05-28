@@ -8,6 +8,7 @@ import android.widget.Toast
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import cz.uhk.stolifi1.databinding.ActivityMainBinding
+import cz.uhk.stolifi1.utils.PermissionUtils
 
 class MainActivity : AppCompatActivity() {
 

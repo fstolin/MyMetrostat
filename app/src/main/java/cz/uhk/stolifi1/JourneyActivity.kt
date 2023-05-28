@@ -1,29 +1,17 @@
 package cz.uhk.stolifi1
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.ActivityNotFoundException
-import android.content.Context
-import android.content.Intent
 import android.location.Location
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
-import android.provider.Settings
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.MultiplePermissionsReport
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import cz.uhk.stolifi1.databinding.ActivityJourneyBinding
+import cz.uhk.stolifi1.utils.PermissionUtils
 
 class JourneyActivity : AppCompatActivity() {
 
@@ -39,7 +27,7 @@ class JourneyActivity : AppCompatActivity() {
         setContentView(R.layout.activity_journey)
 
         // Handle permissions
-        handlePermissions(this@JourneyActivity)
+        PermissionUtils.handlePermissions(this@JourneyActivity)
 
         // View-binding
         binding = ActivityJourneyBinding.inflate(layoutInflater)
@@ -52,7 +40,7 @@ class JourneyActivity : AppCompatActivity() {
     // gpsNowButton
     private fun gpsNowButton(){
         // Permissions
-        handlePermissions(this@JourneyActivity)
+        PermissionUtils.handlePermissions(this@JourneyActivity)
         // Location
         requestUserLocationData()
     }
@@ -79,52 +67,6 @@ class JourneyActivity : AppCompatActivity() {
 
         // Needs permissions -> will already be checked after clicking on start journey
         mFusedLocationClient.requestLocationUpdates(locationRequest, mLocationCallback, Looper.myLooper())
-    }
-
-    // Handles permissions using DEXTER library
-    private fun handlePermissions(context: Context){
-        Dexter.withContext(context).withPermissions(
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ).withListener(object: MultiplePermissionsListener {
-            override fun onPermissionsChecked(permReport: MultiplePermissionsReport?) {
-                // If parameters are accepted
-                if(permReport!!.areAllPermissionsGranted()) {
-                    Toast.makeText(context, "Permissions ok", Toast.LENGTH_SHORT).show()
-                }
-            }
-            override fun onPermissionRationaleShouldBeShown(
-                mutableList: MutableList<PermissionRequest>?,
-                permToken: PermissionToken?
-            ) {
-                // Show rationale
-                showRationaleDialog()
-                // Return to main screen
-                //onBackPressedDispatcher.onBackPressed()
-            }
-
-        }).onSameThread().check()
-    }
-
-    // Shows rationale for user, who didn't provide permissions
-    private fun showRationaleDialog() {
-        AlertDialog.Builder(this)
-            .setMessage("It looks like you declined location permissions. Location is needed to access metro stations. Visit application settings to edit the permissions.")
-            .setPositiveButton("GO TO SETTINGS"){_, _ ->
-                // Show application settings
-                try {
-                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                    val uri = Uri.fromParts("package", packageName, null)
-                    intent.data = uri
-                    startActivity(intent)
-                } catch (e: ActivityNotFoundException){
-                    e.printStackTrace()
-                }
-
-            }
-            .setNegativeButton("CANCEL") {dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
     }
 
     // Unassign view binding
