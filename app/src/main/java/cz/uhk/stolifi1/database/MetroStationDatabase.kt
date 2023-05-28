@@ -5,10 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [MetroStationEntity::class], version = 1)
+@Database(entities = [MetroStationEntity::class, JourneysEntity::class], version = 2)
 abstract class MetroStationDatabase : RoomDatabase() {
 
     abstract fun metroStationDao(): MetroStationDAO
+    abstract fun journeysDao(): JourneyDAO
 
     companion object {
 

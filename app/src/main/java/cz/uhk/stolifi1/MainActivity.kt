@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
+import cz.uhk.stolifi1.database.JourneyDAO
 import cz.uhk.stolifi1.database.MetroStationApp
 import cz.uhk.stolifi1.database.MetroStationDAO
 import cz.uhk.stolifi1.database.MetroStationEntity
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     private var metroStationList: MutableSet<Stop> = mutableSetOf()
     private var stationData: Stations? = null
     private lateinit var metroStationDAO: MetroStationDAO
+    private lateinit var journeyDAO: JourneyDAO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         binding?.myMainImage?.setOnClickListener{ createStationsData() }
         // Metro Station DAO
         metroStationDAO =  (application as MetroStationApp).db.metroStationDao()
+        journeyDAO = (application as MetroStationApp).db.journeysDao()
 
         // TODO only download JSON & update databse when neccesary - once a week - or when requested maybe when the file was changed
         // JSON request
@@ -67,13 +70,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         // List to check added stations
-        var filledList = mutableListOf<String>()
+        val filledList = mutableListOf<String>()
         // Fill in stops - only use Metro stops
         for (stopGroup in stationData!!.stopGroups) {
             // Metro is only in Prague
             if (stopGroup.districtCode != "AB") continue
 
-            var stops : List<Stop>? = stopGroup.stops ?: continue
+            val stops : List<Stop>? = stopGroup.stops ?: continue
 
             for (stop in stops!!) {
                 // Check whether the stop is for metro & whether it already is in the added stations
@@ -89,7 +92,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun printStations(){
-        var br = StringBuilder()
+        val br = StringBuilder()
         for (station in metroStationList) {
             br.append(station.altIdosName)
             br.append(", ")
@@ -108,10 +111,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun fillDBWithStops(stops: MutableSet<Stop>){
         for (stop in stops) {
-            var name = stop.altIdosName ?: ""
-            var line = ""
-            var lat = stop.lat ?: 0.0
-            var lon = stop.lon ?: 0.0
+            val name = stop.altIdosName ?: ""
+            val line = ""
+            val lat = stop.lat ?: 0.0
+            val lon = stop.lon ?: 0.0
             lifecycleScope.launch {
                 metroStationDAO.insert(MetroStationEntity(name=name, line=line, lat=lat, lon=lon))
             }
