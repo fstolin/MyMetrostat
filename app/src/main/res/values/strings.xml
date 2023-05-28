@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">MyMetrostat</string>
+    <string name="welcomeString">Welcome to your metro statistics! Fill in your journey right away or have a look at your stats!</string>
+    <string name="failedString">Failed to load stations from endpoint, using oldest sqlite if present.</string>
+    <string name="startButtonString">Start journey</string>
+    <string name="statsButtonString">My statistics</string>
+    <string name="copyrightString">© Filip Stolín 2023, KUMTE UHK</string>
 </resources>

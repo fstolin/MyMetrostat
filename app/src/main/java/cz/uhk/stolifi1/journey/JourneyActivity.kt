@@ -64,7 +64,7 @@ class JourneyActivity : AppCompatActivity() {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         // Builder of location request
         var locationRequestBuilder = LocationRequest.Builder(android.location.LocationRequest.QUALITY_HIGH_ACCURACY,1000)
-        locationRequestBuilder.setMaxUpdates(1)
+        locationRequestBuilder.setMaxUpdates(10)
         // Location request
         var locationRequest: LocationRequest = locationRequestBuilder.build()
 

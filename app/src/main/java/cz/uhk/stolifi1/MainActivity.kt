@@ -1,9 +1,10 @@
 package cz.uhk.stolifi1
 
+import android.content.ContentValues.TAG
 import android.content.Intent
-import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import cz.uhk.stolifi1.databinding.ActivityMainBinding
@@ -16,11 +17,13 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import kotlin.math.log
+import kotlin.text.StringBuilder
 
 class MainActivity : AppCompatActivity() {
 
     private var binding: ActivityMainBinding? = null
-    private lateinit var stops: MutableSet<Stop>
+    private var metroStationList: MutableSet<Stop> = mutableSetOf()
     private var stationData: Stations? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,11 +38,49 @@ class MainActivity : AppCompatActivity() {
         binding?.startButton?.setOnClickListener { startButton() }
         // Stats button listener
         binding?.statsButton?.setOnClickListener{ statsButton() }
+        binding?.myMainImage?.setOnClickListener{ createStationsData() }
 
         getJSONData()
 
         // Hide buttons (code to remember)
         //binding?.statsButton?.visibility = View.INVISIBLE
+    }
+
+    private fun createStationsData() {
+        // Prevent null issues
+        if (stationData == null) {
+            binding?.failTextView?.visibility = View.VISIBLE
+            return
+        }
+
+        // List to check added stations
+        var filledList = mutableListOf<String>()
+        // Fill in stops - only use Metro stops
+        for (stopGroup in stationData!!.stopGroups) {
+            // Metro is only in Prague
+            if (stopGroup.districtCode != "AB") continue
+
+            var stops : List<Stop>? = stopGroup.stops ?: continue
+
+            for (stop in stops!!) {
+                // Check whether the stop is for metro & whether it already is in the added stations
+                if (stop.isMetro == true && !filledList.contains(stop.altIdosName ?: "null name")) {
+                    metroStationList.add(stop)
+                    filledList.add(stop.altIdosName ?: "null name")
+                }
+            }
+        }
+        Toast.makeText(this@MainActivity, "station data created", Toast.LENGTH_SHORT).show()
+        printStations()
+    }
+
+    private fun printStations(){
+        var br = StringBuilder()
+        for (station in metroStationList) {
+            br.append(station.altIdosName)
+            br.append(", ")
+        }
+        Log.i(TAG, br.toString())
     }
 
     private fun startButton() {
@@ -69,6 +110,7 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call<Stations?>, response: Response<Stations?>) {
                 binding?.failTextView?.visibility = View.INVISIBLE
                 stationData = response.body()
+                Toast.makeText(this@MainActivity, "successfully downloaded station data", Toast.LENGTH_SHORT).show()
             }
             override fun onFailure(call: Call<Stations?>, t: Throwable) {
                 binding?.failTextView?.visibility = View.VISIBLE

@@ -22,8 +22,7 @@ class PermissionUtils {
         // Handles permissions using DEXTER library
         fun handlePermissions(context: Context) {
             Dexter.withContext(context).withPermissions(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION
             ).withListener(object : MultiplePermissionsListener {
                 override fun onPermissionsChecked(permReport: MultiplePermissionsReport?) {
                     // If parameters are accepted
