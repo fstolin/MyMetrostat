@@ -1,4 +1,4 @@
-package cz.uhk.stolifi1
+package cz.uhk.stolifi1.journey
 
 import android.annotation.SuppressLint
 import android.location.Location
@@ -10,6 +10,7 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import cz.uhk.stolifi1.R
 import cz.uhk.stolifi1.databinding.ActivityJourneyBinding
 import cz.uhk.stolifi1.utils.PermissionUtils
 

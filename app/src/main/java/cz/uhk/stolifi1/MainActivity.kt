@@ -3,12 +3,9 @@ package cz.uhk.stolifi1
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import cz.uhk.stolifi1.databinding.ActivityMainBinding
-import cz.uhk.stolifi1.utils.PermissionUtils
+import cz.uhk.stolifi1.journey.JourneyActivity
 
 class MainActivity : AppCompatActivity() {
 
