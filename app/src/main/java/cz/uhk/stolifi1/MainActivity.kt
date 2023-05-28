@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import cz.uhk.stolifi1.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -15,16 +17,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // bind view
+        // Bind view
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding?.root)
 
-        // start button listener
+        // Start button listener
         binding?.startButton?.setOnClickListener { startButton() }
-        // stats button listener
+        // Stats button listener
         binding?.statsButton?.setOnClickListener{ statsButton() }
 
-        // hide buttons (code to remember)
+        // Hide buttons (code to remember)
         //binding?.statsButton?.visibility = View.INVISIBLE
     }
 
