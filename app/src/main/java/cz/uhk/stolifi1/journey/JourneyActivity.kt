@@ -10,6 +10,7 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -71,20 +72,23 @@ class JourneyActivity : AppCompatActivity() {
         startStationSearchView = findViewById(R.id.startSearchView)
         endStationSearchView = findViewById(R.id.endSearchView)
 
+        recyclerView.setHasFixedSize(true)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
         // Handle permissions
         PermissionUtils.handlePermissions(this@JourneyActivity)
         // Location
         requestUserLocationData()
 
         // Db - DAOs
-        metroStationDAO =  (application as MetroStationApp).db.metroStationDao()
+        metroStationDAO = (application as MetroStationApp).db.metroStationDao()
         journeyDAO = (application as MetroStationApp).db.journeysDao()
 
         // Hide unnecessary UI
         binding?.toStationLinearLayout?.visibility = View.GONE
 
         // Buttons
-        binding?.finishButton?.setOnClickListener{
+        binding?.finishButton?.setOnClickListener {
             finishJourney()
         }
 
@@ -95,12 +99,13 @@ class JourneyActivity : AppCompatActivity() {
         stationlist = arrayListOf()
         addStationData()
         Log.i(TAG, "###### $stationlist")
+
         // Adapter
         adapter = StationAdapter(stationlist)
+        Log.i(TAG, " ##### adamter list: ${adapter.stationList.toString()} number: ${adapter.itemCount}")
         recyclerView.adapter = adapter
-
+        Log.i(TAG, "###### $adapter")
     }
-
 
     private fun finishJourney() {
         TODO("Not yet implemented")

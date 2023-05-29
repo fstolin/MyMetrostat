@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
             getJSONData()
         }
         job.join()
-        Log.i(TAG, "My metro stations: $metroStationList")
+        //Log.i(TAG, "My metro stations: $metroStationList")
     }
 
     private fun createStationsData() {
