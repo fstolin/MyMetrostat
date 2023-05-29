@@ -1,5 +1,5 @@
 coroutine
-sqlite
+
 calculating distance
 recycled search view - selector of subway stations
 confirming & result activity, result class, result sqlites & log 
@@ -9,3 +9,9 @@ stats activity & stats class, sqlite
 IDEAS:
 improved station selecting - with transitions to tram
 station list (basically the same) - with transitions & info
+graphed subway lines -> stats of the whole journey
+
+
+FUTURE:
+map implementation
+export jpeg with lines & densities

@@ -21,9 +21,11 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -59,13 +61,21 @@ class MainActivity : AppCompatActivity() {
         journeyDAO = (application as MetroStationApp).db.journeysDao()
 
         // TODO only download JSON & update databse when neccesary - once a week - or when requested maybe when the file was changed
-        // JSON request
-        // TODO async
-        getJSONData()
+        // JSON async request
+        getJSONDataAsync()
 
 
         // Hide buttons (code to remember)
         //binding?.statsButton?.visibility = View.INVISIBLE
+    }
+
+    private fun getJSONDataAsync() = runBlocking{
+        val job = launch {
+            getJSONData()
+        }
+        job.join()
+        Log.i(TAG, "My metro stations: $metroStationList")
+        Toast.makeText(this@MainActivity, "successfully downloaded station data", Toast.LENGTH_SHORT).show()
     }
 
     private fun createStationsData() {
@@ -93,7 +103,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
         Toast.makeText(this@MainActivity, "station data created", Toast.LENGTH_SHORT).show()
-        printStations()
+        //printStations()
+        //getDBtest()
         fillDBWithStops(metroStationList)
     }
 
@@ -115,15 +126,25 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this@MainActivity, "Your statistics", Toast.LENGTH_SHORT).show()
     }
 
-    private fun fillDBWithStops(stops: MutableSet<Stop>) {
+    // Suspended function to use the DAO
+    private suspend fun getCurrentStations(): List<MetroStationEntity> {
+        return metroStationDAO.fetchAllMetroStations().first()
+    }
+
+    private fun getDBtest() = runBlocking {
         var existingMSEs = listOf<MetroStationEntity>()
         // Get existing Stations
-        lifecycleScope.launch {
-            metroStationDAO.fetchAllMetroStations().collect() {
-                existingMSEs = it
-            }
-        }
-        Log.i(TAG, existingMSEs.toString())
+        existingMSEs = getCurrentStations()
+        Log.i(TAG, "DATABASE: ${existingMSEs.toString()}")
+    }
+
+    // Run blocking due to coRoutine usage
+    private fun fillDBWithStops(stops: MutableSet<Stop>) = runBlocking {
+        var existingMSEs = listOf<MetroStationEntity>()
+        // Get existing Stations
+        existingMSEs = getCurrentStations()
+
+        Log.i(TAG, "Database check: $existingMSEs")
         // Add each station
         for (stop in stops) {
             var isDuplicate = false
@@ -135,14 +156,15 @@ class MainActivity : AppCompatActivity() {
             // Check whether stop is a duplicate
             for (eMse in existingMSEs) {
                 if (eMse.name == name) {
-                    Log.i(TAG, name)
                     isDuplicate = true
                     break
                 }
             }
+
             // If it isn't already entered
             if (!isDuplicate) {
-                lifecycleScope.launch {
+                // Launch coroutine for adding to db
+                launch {
                     metroStationDAO.insert(
                         MetroStationEntity(
                             name = name,
@@ -156,7 +178,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getJSONData() {
+   suspend private fun getJSONData() {
         // Retrofit builder
         val retrofitBuilder = Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
@@ -174,7 +196,6 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call<Stations?>, response: Response<Stations?>) {
                 binding?.failTextView?.visibility = View.INVISIBLE
                 stationData = response.body()
-                Toast.makeText(this@MainActivity, "successfully downloaded station data", Toast.LENGTH_SHORT).show()
             }
             override fun onFailure(call: Call<Stations?>, t: Throwable) {
                 binding?.failTextView?.visibility = View.VISIBLE
