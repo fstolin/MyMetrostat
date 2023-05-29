@@ -5,4 +5,6 @@
     <string name="startButtonString">Start journey</string>
     <string name="statsButtonString">My statistics</string>
     <string name="copyrightString">© Filip Stolín 2023, KUMTE UHK</string>
+    <string name="strStationName">Vysočanská</string>
+    <string name="strDistance">1025 m</string>
 </resources>
