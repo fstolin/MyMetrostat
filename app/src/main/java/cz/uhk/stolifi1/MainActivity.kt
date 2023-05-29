@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import com.google.android.material.snackbar.Snackbar
 import cz.uhk.stolifi1.database.JourneyDAO
 import cz.uhk.stolifi1.database.MetroStationApp
 import cz.uhk.stolifi1.database.MetroStationDAO
@@ -25,7 +24,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import kotlin.math.log
 import kotlin.text.StringBuilder
 
 class MainActivity : AppCompatActivity() {
@@ -35,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     private var stationData: Stations? = null
     private lateinit var metroStationDAO: MetroStationDAO
     private lateinit var journeyDAO: JourneyDAO
+    private lateinit var snackView: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,11 +42,13 @@ class MainActivity : AppCompatActivity() {
         // Bind view
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding?.root)
+        // View for Snackbars etc
+        snackView = findViewById(R.id.mainPageLinearLayout)
 
         // Start button listener
         binding?.startButton?.setOnClickListener { startButton() }
         // Stats button listener
-        binding?.statsButton?.setOnClickListener{ statsButton(it) }
+        binding?.statsButton?.setOnClickListener{ statsButton() }
         // Main image easter egg / station data
         binding?.myMainImage?.setOnClickListener{ createStationsData() }
         // Metro Station DAO
@@ -114,8 +115,8 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun statsButton(view: View) {
-        Utils.showDSnack("Your stats", view)
+    private fun statsButton() {
+        Utils.showDSnack("Your stats", snackView)
     }
 
     // Suspended function to use the DAO

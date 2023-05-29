@@ -9,7 +9,7 @@ class Utils {
 
         // shows a dismissable Snackbar
         fun showDSnack(str: String, view: View){
-            val snack = Snackbar.make(view,"Your stats", Snackbar.LENGTH_SHORT)
+                val snack = Snackbar.make(view,str, Snackbar.LENGTH_SHORT)
             snack.setAction("Dismiss") { snack.dismiss() }
             snack.show()
         }

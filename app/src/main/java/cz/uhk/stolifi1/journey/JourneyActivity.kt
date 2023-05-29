@@ -1,18 +1,30 @@
 package cz.uhk.stolifi1.journey
 
 import android.annotation.SuppressLint
+import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
+import android.util.Log
+import android.view.View
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import cz.uhk.stolifi1.R
+import cz.uhk.stolifi1.database.JourneyDAO
+import cz.uhk.stolifi1.database.MetroStationApp
+import cz.uhk.stolifi1.database.MetroStationDAO
+import cz.uhk.stolifi1.database.MetroStationEntity
 import cz.uhk.stolifi1.databinding.ActivityJourneyBinding
 import cz.uhk.stolifi1.utils.PermissionUtils
+import cz.uhk.stolifi1.utils.Utils
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class JourneyActivity : AppCompatActivity() {
 
@@ -22,22 +34,42 @@ class JourneyActivity : AppCompatActivity() {
     // Location variables
     private var userLat: Double = 0.0
     private var userLon: Double = 0.0
+    private lateinit var snackView: View
+    // Database
+    private lateinit var metroStationDAO: MetroStationDAO
+    private lateinit var journeyDAO: JourneyDAO
+    // Station list
+    private lateinit var metroStations: List<MetroStationEntity>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_journey)
+
+        // View-binding
+        binding = ActivityJourneyBinding.inflate(layoutInflater)
+        setContentView(binding?.root)
+
+        // Snackbar view
+        snackView = findViewById(R.id.journeyActivityMainView)
 
         // Handle permissions
         PermissionUtils.handlePermissions(this@JourneyActivity)
         // Location
         requestUserLocationData()
 
-        // View-binding
-        binding = ActivityJourneyBinding.inflate(layoutInflater)
-        setContentView(binding?.root)
+        // Db - DAOs
+        metroStationDAO =  (application as MetroStationApp).db.metroStationDao()
+        journeyDAO = (application as MetroStationApp).db.journeysDao()
 
         // Buttons
-        binding?.gpsNow?.setOnClickListener{ gpsNowButton() }
+        binding?.gpsNow?.setOnClickListener{
+            gpsNowButton()
+            Utils.showDSnack("SnackWorking", snackView)
+        }
+
+        // On create get database for the selectables
+        getCurrentStations()
+
     }
 
     // gpsNowButton
@@ -58,7 +90,7 @@ class JourneyActivity : AppCompatActivity() {
         }
     }
 
-    // Request user location
+    // Request user location - we already have the permissions handled
     @SuppressLint("MissingPermission")
     private fun requestUserLocationData(){
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
@@ -76,5 +108,12 @@ class JourneyActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         binding = null
+    }
+
+    private fun getCurrentStations() = runBlocking {
+        val job = launch {
+            metroStations = metroStationDAO.fetchAllMetroStations().first()
+        }
+        job.join()
     }
 }
