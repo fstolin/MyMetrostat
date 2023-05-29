@@ -9,6 +9,9 @@ import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -29,17 +32,23 @@ import kotlinx.coroutines.runBlocking
 class JourneyActivity : AppCompatActivity() {
 
     private var binding: ActivityJourneyBinding? = null
-    // Location fused client
-    private lateinit var mFusedLocationClient: FusedLocationProviderClient
     // Location variables
     private var userLat: Double = 0.0
     private var userLon: Double = 0.0
+
+    // Location fused client
+    private lateinit var mFusedLocationClient: FusedLocationProviderClient
+    // Snackbar View
     private lateinit var snackView: View
     // Database
     private lateinit var metroStationDAO: MetroStationDAO
     private lateinit var journeyDAO: JourneyDAO
     // Station list
     private lateinit var metroStations: List<MetroStationEntity>
+    // Recycle view + Searchviews
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var startStationSearchView: SearchView
+    private lateinit var endStationSearchView: SearchView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +61,11 @@ class JourneyActivity : AppCompatActivity() {
         // Snackbar view
         snackView = findViewById(R.id.journeyActivityMainView)
 
+        // Recycler + search Views
+        recyclerView = findViewById(R.id.stationRecycleView)
+        startStationSearchView = findViewById(R.id.startSearchView)
+        endStationSearchView = findViewById(R.id.endSearchView)
+
         // Handle permissions
         PermissionUtils.handlePermissions(this@JourneyActivity)
         // Location
@@ -61,15 +75,21 @@ class JourneyActivity : AppCompatActivity() {
         metroStationDAO =  (application as MetroStationApp).db.metroStationDao()
         journeyDAO = (application as MetroStationApp).db.journeysDao()
 
+        // Hide unnecessary UI
+        binding?.toStationLinearLayout?.visibility = View.GONE
+
         // Buttons
-        binding?.gpsNow?.setOnClickListener{
-            gpsNowButton()
-            Utils.showDSnack("SnackWorking", snackView)
+        binding?.finishButton?.setOnClickListener{
+            finishJourney()
         }
 
         // On create get database for the selectables
         getCurrentStations()
 
+    }
+
+    private fun finishJourney() {
+        TODO("Not yet implemented")
     }
 
     // gpsNowButton
@@ -86,7 +106,6 @@ class JourneyActivity : AppCompatActivity() {
             val mLastLocation: Location = locationResult.lastLocation!!
             userLat = mLastLocation.latitude
             userLon = mLastLocation.longitude
-            binding?.testText?.text = "Lat: ${userLat}; Lon: ${userLon}"
         }
     }
 
