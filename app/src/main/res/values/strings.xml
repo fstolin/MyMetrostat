@@ -7,4 +7,5 @@
     <string name="copyrightString">© Filip Stolín 2023, KUMTE UHK</string>
     <string name="strStationName">Vysočanská</string>
     <string name="strDistance">1025 m</string>
+    <string name="confirmButtonString">Confirm</string>
 </resources>

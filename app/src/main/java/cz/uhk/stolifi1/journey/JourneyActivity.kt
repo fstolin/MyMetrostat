@@ -23,7 +23,9 @@ import cz.uhk.stolifi1.database.MetroStationApp
 import cz.uhk.stolifi1.database.MetroStationDAO
 import cz.uhk.stolifi1.database.MetroStationEntity
 import cz.uhk.stolifi1.databinding.ActivityJourneyBinding
+import cz.uhk.stolifi1.utils.ListStation
 import cz.uhk.stolifi1.utils.PermissionUtils
+import cz.uhk.stolifi1.utils.StationAdapter
 import cz.uhk.stolifi1.utils.Utils
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -43,12 +45,15 @@ class JourneyActivity : AppCompatActivity() {
     // Database
     private lateinit var metroStationDAO: MetroStationDAO
     private lateinit var journeyDAO: JourneyDAO
-    // Station list
+    // Station lists
     private lateinit var metroStations: List<MetroStationEntity>
+    private lateinit var stationlist: ArrayList<ListStation>
     // Recycle view + Searchviews
     private lateinit var recyclerView: RecyclerView
     private lateinit var startStationSearchView: SearchView
     private lateinit var endStationSearchView: SearchView
+    // Adapter
+    private lateinit var adapter: StationAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,7 +91,16 @@ class JourneyActivity : AppCompatActivity() {
         // On create get database for the selectables
         getCurrentStations()
 
+        // Add stationList data
+        stationlist = arrayListOf()
+        addStationData()
+        Log.i(TAG, "###### $stationlist")
+        // Adapter
+        adapter = StationAdapter(stationlist)
+        recyclerView.adapter = adapter
+
     }
+
 
     private fun finishJourney() {
         TODO("Not yet implemented")
@@ -114,10 +128,10 @@ class JourneyActivity : AppCompatActivity() {
     private fun requestUserLocationData(){
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         // Builder of location request
-        var locationRequestBuilder = LocationRequest.Builder(android.location.LocationRequest.QUALITY_HIGH_ACCURACY,1000)
+        val locationRequestBuilder = LocationRequest.Builder(android.location.LocationRequest.QUALITY_HIGH_ACCURACY,1000)
         locationRequestBuilder.setMaxUpdates(10)
         // Location request
-        var locationRequest: LocationRequest = locationRequestBuilder.build()
+        val locationRequest: LocationRequest = locationRequestBuilder.build()
 
         // Needs permissions -> will already be checked after clicking on start journey
         mFusedLocationClient.requestLocationUpdates(locationRequest, mLocationCallback, Looper.myLooper())
@@ -135,4 +149,11 @@ class JourneyActivity : AppCompatActivity() {
         }
         job.join()
     }
+
+    private fun addStationData() {
+        stationlist.add(ListStation("Vysočanská", 2, 435.0, "B"))
+        stationlist.add(ListStation("Vltavská", 3, 1785.0, "C"))
+        stationlist.add(ListStation("Muzeum", 4, 85785.0, "AC"))
+    }
+
 }

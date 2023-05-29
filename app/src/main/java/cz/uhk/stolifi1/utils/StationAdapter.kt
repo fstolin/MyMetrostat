@@ -23,36 +23,36 @@ class StationAdapter (var stationList: List<ListStation>) : RecyclerView.Adapter
     override fun onBindViewHolder(holder: StationViewHolder, position: Int) {
         // check the line
         val line = stationList[position].line
-        var lineInt = 0
-        var lineInt2 = 0
+        var lineInt = R.drawable.metro
+        var lineInt2 = R.drawable.metro
         when (line){
-            "" -> lineInt = 0
-            "A" -> lineInt = 1
-            "B" -> lineInt = 2
-            "C" -> lineInt = 3
+            "" -> lineInt = R.drawable.metro
+            "A" -> lineInt = R.drawable.metroa
+            "B" -> lineInt = R.drawable.metrob
+            "C" -> lineInt = R.drawable.metroc
             "AB" -> {
-                lineInt = 1
-                lineInt2 = 2
+                lineInt = R.drawable.metroa
+                lineInt2 = R.drawable.metrob
             }
             "BA" -> {
-                lineInt = 1
-                lineInt2 = 2
+                lineInt = R.drawable.metroa
+                lineInt2 = R.drawable.metrob
             }
             "AC" -> {
-                lineInt = 1
-                lineInt2 = 3
+                lineInt = R.drawable.metroa
+                lineInt2 = R.drawable.metroc
             }
             "CA" -> {
-                lineInt = 1
-                lineInt2 = 3
+                lineInt = R.drawable.metroa
+                lineInt2 = R.drawable.metroc
             }
             "CB" -> {
-                lineInt = 2
-                lineInt2 = 3
+                lineInt = R.drawable.metrob
+                lineInt2 = R.drawable.metroc
             }
             "BC" -> {
-                lineInt = 2
-                lineInt2 = 3
+                lineInt = R.drawable.metrob
+                lineInt2 = R.drawable.metroc
             }
         }
 
