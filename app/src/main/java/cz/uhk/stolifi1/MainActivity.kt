@@ -6,8 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
-import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import cz.uhk.stolifi1.database.JourneyDAO
 import cz.uhk.stolifi1.database.MetroStationApp
 import cz.uhk.stolifi1.database.MetroStationDAO
@@ -17,13 +16,8 @@ import cz.uhk.stolifi1.journey.JourneyActivity
 import cz.uhk.stolifi1.stations.Stations
 import cz.uhk.stolifi1.stations.Stop
 import cz.uhk.stolifi1.utils.APIInterface
-import kotlinx.coroutines.async
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.collect
+import cz.uhk.stolifi1.utils.Utils
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import retrofit2.Call
@@ -53,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         // Start button listener
         binding?.startButton?.setOnClickListener { startButton() }
         // Stats button listener
-        binding?.statsButton?.setOnClickListener{ statsButton() }
+        binding?.statsButton?.setOnClickListener{ statsButton(it) }
         // Main image easter egg / station data
         binding?.myMainImage?.setOnClickListener{ createStationsData() }
         // Metro Station DAO
@@ -75,7 +69,6 @@ class MainActivity : AppCompatActivity() {
         }
         job.join()
         Log.i(TAG, "My metro stations: $metroStationList")
-        Toast.makeText(this@MainActivity, "successfully downloaded station data", Toast.LENGTH_SHORT).show()
     }
 
     private fun createStationsData() {
@@ -102,7 +95,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        Toast.makeText(this@MainActivity, "station data created", Toast.LENGTH_SHORT).show()
         //printStations()
         //getDBtest()
         fillDBWithStops(metroStationList)
@@ -122,8 +114,8 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun statsButton() {
-        Toast.makeText(this@MainActivity, "Your statistics", Toast.LENGTH_SHORT).show()
+    private fun statsButton(view: View) {
+        Utils.showDSnack("Your stats", view)
     }
 
     // Suspended function to use the DAO
