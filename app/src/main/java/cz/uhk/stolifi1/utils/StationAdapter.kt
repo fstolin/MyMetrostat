@@ -89,4 +89,9 @@ class StationAdapter (var stationList: List<ListStation>) : RecyclerView.Adapter
         holder.titleText.text = stationList[position].name
     }
 
+    fun setFilteredList(list: List<ListStation>){
+        this.stationList = list
+        notifyDataSetChanged()
+    }
+
 }

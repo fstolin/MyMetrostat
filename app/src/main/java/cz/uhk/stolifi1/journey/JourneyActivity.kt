@@ -31,6 +31,7 @@ import cz.uhk.stolifi1.utils.Utils
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.util.Locale
 
 class JourneyActivity : AppCompatActivity() {
 
@@ -102,18 +103,28 @@ class JourneyActivity : AppCompatActivity() {
         // Adapter
         adapter = StationAdapter(stationlist)
         recyclerView.adapter = adapter
+
+        // Clicking on the start station list
+        startStationSearchView.setOnClickListener {
+            requestUserLocationData()
+        }
+
+        // Start station text filtering the list
+        startStationSearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                TODO("Not yet implemented")
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filterList(newText)
+                return true
+            }
+
+        })
     }
 
     private fun finishJourney() {
         TODO("Not yet implemented")
-    }
-
-    // gpsNowButton
-    private fun gpsNowButton(){
-        // Permissions
-        PermissionUtils.handlePermissions(this@JourneyActivity)
-        // Location
-        requestUserLocationData()
     }
 
     // Location callback
@@ -161,6 +172,7 @@ class JourneyActivity : AppCompatActivity() {
             tempStation.distance = calculateDistance(station)
             stationlist.add(tempStation)
         }
+        stationlist = ArrayList(stationlist.sortedBy { it.distance })
     }
 
     // Calculates distance between the user and the station
@@ -193,6 +205,25 @@ class JourneyActivity : AppCompatActivity() {
     private fun updateDistanceData(){
         for (station in stationlist) {
             station.distance = calculateDistance(station)
+        }
+        stationlist = ArrayList(stationlist.sortedBy { it.distance })
+    }
+
+    // filters a list based on the new string. Sort by distance
+    private fun filterList(newText: String?) {
+        if (newText != null) {
+            var filteredList = ArrayList<ListStation>()
+            for (station in stationlist) {
+                if (station.name.lowercase(Locale.ROOT).contains(newText)){
+                    filteredList.add(station)
+                }
+            }
+
+            // Empty result
+            if (!filteredList.isEmpty()) {
+                filteredList = ArrayList(filteredList.sortedBy { it.distance })
+                adapter.setFilteredList(filteredList)
+            }
         }
     }
 
