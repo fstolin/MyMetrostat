@@ -104,6 +104,10 @@ class JourneyActivity : AppCompatActivity() {
             requestUserLocationData()
         }
 
+        startStationSearchView.setOnQueryTextFocusChangeListener{_, _ ->
+            requestUserLocationData()
+        }
+
         // Start station text filtering the list
         startStationSearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {

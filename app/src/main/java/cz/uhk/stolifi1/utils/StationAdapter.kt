@@ -1,5 +1,7 @@
 package cz.uhk.stolifi1.utils
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +33,7 @@ class StationAdapter (var stationList: List<ListStation>) : RecyclerView.Adapter
         // check the line
         var transfer = false
         val line = stationList[position].line
+        Log.i(TAG, "${stationList[position].name}: $line")
         var lineInt = R.drawable.metroa
         //default
         var lineInt2 = R.drawable.metroa
@@ -74,7 +77,11 @@ class StationAdapter (var stationList: List<ListStation>) : RecyclerView.Adapter
         // Line logos
         holder.logo.setImageResource(lineInt)
         holder.logo2.setImageResource(lineInt2)
-        if(transfer) holder.logo2.visibility = View.VISIBLE
+        if(transfer) {
+            holder.logo2.visibility = View.VISIBLE
+        } else {
+            holder.logo2.visibility = View.INVISIBLE
+        }
         // Distance
         var unit = "m"
         var distanceValue = stationList[position].distance

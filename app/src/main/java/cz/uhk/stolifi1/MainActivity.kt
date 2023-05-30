@@ -72,6 +72,7 @@ class MainActivity : AppCompatActivity() {
         //Log.i(TAG, "My metro stations: $metroStationList")
     }
 
+    // Creates station data from the JSON to be saved in the database
     private fun createStationsData() {
         // Prevent null issues
         if (stationData == null) {
@@ -96,8 +97,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        //printStations()
-        //getDBtest()
         fillDBWithStops(metroStationList)
     }
 
@@ -131,7 +130,7 @@ class MainActivity : AppCompatActivity() {
         Log.i(TAG, "DATABASE: ${existingMSEs.toString()}")
     }
 
-    // Run blocking due to coRoutine usage
+    // Run blocking due to coRoutine usage, fills database with stop data
     private fun fillDBWithStops(stops: MutableSet<Stop>) = runBlocking {
         var existingMSEs = listOf<MetroStationEntity>()
         // Get existing Stations
@@ -142,7 +141,7 @@ class MainActivity : AppCompatActivity() {
         for (stop in stops) {
             var isDuplicate = false
             val name = stop.altIdosName ?: ""
-            val line = ""
+            val line = getLines(stop)
             val lat = stop.lat ?: 0.0
             val lon = stop.lon ?: 0.0
 
@@ -169,6 +168,22 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    // Returns the lines in the correct String format
+    private fun getLines(stop: Stop): String {
+        // Hardcoded lines for transfer stations due to their low amount and a lack of time
+        if (stop.altIdosName == "Muzeum") return "CA"
+        if (stop.altIdosName == "Můstek") return "AB"
+        if (stop.altIdosName == "Florenc") return "CB"
+
+        // Other stations
+        var sb = StringBuilder()
+        if (stop.lines == null) return ""
+        for (line in stop.lines) {
+            sb.append(line.name)
+        }
+        return sb.toString()
     }
 
    suspend private fun getJSONData() {
