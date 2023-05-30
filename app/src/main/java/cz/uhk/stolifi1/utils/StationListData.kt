@@ -4,6 +4,7 @@ data class StationListData (
 
         val name: String,
         val logo: Int,
-        val logo2: Int
+        val logo2: Int,
+        val distance: Double
 
         )

@@ -98,13 +98,10 @@ class JourneyActivity : AppCompatActivity() {
         // Add stationList data
         stationlist = arrayListOf()
         addStationData()
-        Log.i(TAG, "###### $stationlist")
 
         // Adapter
         adapter = StationAdapter(stationlist)
-        Log.i(TAG, " ##### adamter list: ${adapter.stationList.toString()} number: ${adapter.itemCount}")
         recyclerView.adapter = adapter
-        Log.i(TAG, "###### $adapter")
     }
 
     private fun finishJourney() {
@@ -125,6 +122,8 @@ class JourneyActivity : AppCompatActivity() {
             val mLastLocation: Location = locationResult.lastLocation!!
             userLat = mLastLocation.latitude
             userLon = mLastLocation.longitude
+            // Update distance data for stations
+            updateDistanceData()
         }
     }
 
@@ -155,10 +154,46 @@ class JourneyActivity : AppCompatActivity() {
         job.join()
     }
 
+    // Adds stations to recyclerView list with required data
     private fun addStationData() {
-        stationlist.add(ListStation("Vysočanská", 2, 435.0, "B"))
-        stationlist.add(ListStation("Vltavská", 3, 1785.0, "C"))
-        stationlist.add(ListStation("Muzeum", 4, 85785.0, "AC"))
+        for (station in metroStations) {
+            var tempStation = ListStation(station.name, station.id, 0.0, station.line, station.lon, station.lat)
+            tempStation.distance = calculateDistance(station)
+            stationlist.add(tempStation)
+        }
+    }
+
+    // Calculates distance between the user and the station
+    private fun calculateDistance(station: MetroStationEntity): Double {
+        var stationLoc: Location = Location("station location")
+        stationLoc.latitude = station.lat
+        stationLoc.longitude = station.lon
+
+        var userLoc: Location = Location("user location")
+        userLoc.latitude = userLat
+        userLoc.longitude = userLon
+
+        return stationLoc.distanceTo(userLoc).toDouble()
+    }
+
+    // Calculates distance between the user and the station
+    private fun calculateDistance(station: ListStation): Double {
+        var stationLoc: Location = Location("station location")
+        stationLoc.latitude = station.lat
+        stationLoc.longitude = station.lon
+
+        var userLoc: Location = Location("user location")
+        userLoc.latitude = userLat
+        userLoc.longitude = userLon
+
+        return stationLoc.distanceTo(userLoc).toDouble()
+    }
+
+    // Updates distance data for all stations
+    private fun updateDistanceData(){
+        for (station in stationlist) {
+            station.distance = calculateDistance(station)
+        }
     }
 
 }

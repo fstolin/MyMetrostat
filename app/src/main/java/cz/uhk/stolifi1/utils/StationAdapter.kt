@@ -15,24 +15,22 @@ class StationAdapter (var stationList: List<ListStation>) : RecyclerView.Adapter
         val logo: ImageView = itemView.findViewById(R.id.lineIcon)
         val logo2: ImageView = itemView.findViewById(R.id.lineIcon2)
         val titleText: TextView = itemView.findViewById(R.id.stationName)
+        val distance: TextView = itemView.findViewById(R.id.stationDistance)
     }
 
     // Creating the recyclerView
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StationViewHolder {
-        Log.i(TAG, "#######INSIDE onCreateViewHolder")
         val view = LayoutInflater.from(parent.context).inflate(R.layout.station_list_layout, parent, false)
 
         return StationViewHolder(view)
     }
 
     override fun getItemCount(): Int {
-        Log.i(TAG, "#######INSIDE GETITEMCOUNT")
         return stationList.size
     }
 
     override fun onBindViewHolder(holder: StationViewHolder, position: Int) {
         // check the line
-        Log.i(TAG, "#######INSIDE ONBIND")
         var transfer = false
         val line = stationList[position].line
         var lineInt = R.drawable.metroa
@@ -75,9 +73,19 @@ class StationAdapter (var stationList: List<ListStation>) : RecyclerView.Adapter
             }
         }
 
+        // Line logos
         holder.logo.setImageResource(lineInt)
         holder.logo2.setImageResource(lineInt2)
         if(transfer) holder.logo2.visibility = View.VISIBLE
+        // Distance
+        var unit = "m"
+        var distanceValue = stationList[position].distance
+        if (distanceValue > 5000) {
+            distanceValue /= 1000.0
+            unit = "km"
+        }
+        holder.distance.text = "${distanceValue.toInt()} $unit"
+        // Name
         holder.titleText.text = stationList[position].name
     }
 
