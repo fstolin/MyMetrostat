@@ -1,18 +1,14 @@
 package cz.uhk.stolifi1.journey
 
 import android.annotation.SuppressLint
-import android.content.ContentValues
-import android.content.ContentValues.TAG
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -27,7 +23,6 @@ import cz.uhk.stolifi1.databinding.ActivityJourneyBinding
 import cz.uhk.stolifi1.utils.ListStation
 import cz.uhk.stolifi1.utils.PermissionUtils
 import cz.uhk.stolifi1.utils.StationAdapter
-import cz.uhk.stolifi1.utils.Utils
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -207,6 +202,7 @@ class JourneyActivity : AppCompatActivity() {
             station.distance = calculateDistance(station)
         }
         stationlist = ArrayList(stationlist.sortedBy { it.distance })
+        adapter.updateStationList(stationlist)
     }
 
     // filters a list based on the new string. Sort by distance
@@ -222,7 +218,7 @@ class JourneyActivity : AppCompatActivity() {
             // Empty result
             if (!filteredList.isEmpty()) {
                 filteredList = ArrayList(filteredList.sortedBy { it.distance })
-                adapter.setFilteredList(filteredList)
+                adapter.updateStationList(filteredList)
             }
         }
     }

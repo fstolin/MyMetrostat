@@ -1,7 +1,5 @@
 package cz.uhk.stolifi1.utils
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -89,7 +87,7 @@ class StationAdapter (var stationList: List<ListStation>) : RecyclerView.Adapter
         holder.titleText.text = stationList[position].name
     }
 
-    fun setFilteredList(list: List<ListStation>){
+    fun updateStationList(list: List<ListStation>){
         this.stationList = list
         notifyDataSetChanged()
     }

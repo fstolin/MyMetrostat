@@ -35,6 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|center"
             android:src="@drawable/metroa"
+            android:layout_marginStart="-20dp"
             android:padding="10dp" />
 
         <ImageView
@@ -43,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|center"
             android:src="@drawable/metroa"
-            android:layout_marginStart="-33dp"
+            android:layout_marginStart="-41dp"
             android:padding="10dp"
             android:visibility="invisible"/>
 
@@ -51,8 +52,9 @@
             android:id="@+id/stationName"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/strStationName"
-            android:textSize="22sp"
+            android:text="@string/n_m_st_republiky"
+            android:textSize="20sp"
+            android:layout_marginStart="-17dp"
             android:gravity="start|center"
             />
 

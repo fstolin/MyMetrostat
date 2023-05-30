@@ -8,4 +8,5 @@
     <string name="strStationName">Vysočanská</string>
     <string name="strDistance">1025 m</string>
     <string name="confirmButtonString">Confirm</string>
+    <string name="n_m_st_republiky">Náměstí republiky</string>
 </resources>
