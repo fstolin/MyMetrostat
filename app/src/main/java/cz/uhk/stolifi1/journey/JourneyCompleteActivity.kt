@@ -83,7 +83,7 @@ class JourneyCompleteActivity : AppCompatActivity() {
                 sb.append(distance)
                 sb.append(" km")
             } else {
-                sb.append(distance)
+                sb.append(distance.toInt())
                 sb.append(" m")
             }
             binding?.completeDistanceText?.text = sb.toString()

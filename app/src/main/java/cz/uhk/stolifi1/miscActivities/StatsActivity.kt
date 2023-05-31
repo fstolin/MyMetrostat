@@ -91,7 +91,7 @@ class StatsActivity : AppCompatActivity() {
                 if (departureStation != null) {
                     departureStation.count += 1
                 } else {
-                    topStations.add(PopularStation(journey.arriveStationName, 1))
+                    topStations.add(PopularStation(journey.departStationName, 1))
                 }
                 // Calculate top line
                 // Arrivals
@@ -115,11 +115,14 @@ class StatsActivity : AppCompatActivity() {
             }
 
             // Stats finished in application -> now show in UI
+            // Total journeys
+            binding?.completeJourneysCountText?.text = "${journeyList.count()}"
             // Distance + CO
-            binding?.completeDistanceText?.text = totalDistance.toInt().toString()
-            binding?.completeCO2Text?.text = totalCO2saved.toInt().toString()
+            totalDistance /= 1000
+            binding?.completeDistanceText?.text = "${totalDistance.toInt().toString()} km"
+            binding?.completeCO2Text?.text = "${totalCO2saved.toInt().toString()} kg"
             // Stations
-            topStations.sortedBy { it.count }
+            topStations = ArrayList (topStations.sortedBy { it.count })
             topStations.reverse()
             binding?.top1Name?.text = topStations[0].name
             binding?.top1Visits?.text= topStations[0].count.toString()
@@ -128,7 +131,7 @@ class StatsActivity : AppCompatActivity() {
             binding?.top3Name?.text = topStations[2].name
             binding?.top3Visits?.text= topStations[2].count.toString()
             // Line
-            topLines.sortedBy { it.count }
+            topLines = ArrayList(topLines.sortedBy { it.count })
             topLines.reverse()
             var topLine = topLines[0]
             binding?.topLineImageView?.setImageResource(Utils.getLineDrawable(topLine.name))
