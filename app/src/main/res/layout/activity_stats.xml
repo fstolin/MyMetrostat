@@ -1,9 +1,326 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".miscActivities.StatsActivity">
+    tools:context=".journey.JourneyCompleteActivity"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Your METRO statistics"
+        android:fontFamily="sans-serif-light"
+        android:textColor="@color/colorLightGray"
+        android:textSize="35sp"
+        android:gravity="center"
+        android:layout_marginTop="60dp"
+        android:layout_marginHorizontal="15dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginVertical="20dp"
+        android:layout_marginHorizontal="40dp"
+        android:layout_gravity="center"
+        android:gravity="center">
+
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:src="@drawable/metroa"
+            android:layout_gravity="center"/>
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:src="@drawable/metrob"
+            android:layout_gravity="center"/>
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:src="@drawable/metroc"
+            android:layout_gravity="center"/>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="40dp"
+        android:layout_gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="start|center"
+            android:text="Total distance traveled:"
+            android:textColor="@color/colorLightGray"
+            android:fontFamily="sans-serif-light"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/completeDistanceText"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="end|center"
+            android:textStyle="bold"
+            android:text="1045 m"
+            android:textColor="@color/colorAccent"
+            android:fontFamily="sans-serif-light"
+            android:textSize="22sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="40dp"
+        android:layout_gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="start|center"
+            android:text="Total CO2 emissions saved:"
+            android:textColor="@color/colorLightGray"
+            android:fontFamily="sans-serif-light"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/completeCO2Text"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="end|center"
+            android:textStyle="bold"
+            android:text="1045 kg"
+            android:textColor="@color/colorAccent"
+            android:fontFamily="sans-serif-light"
+            android:textSize="22sp"/>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:src="@drawable/leaf"
+        app:tint="@color/colorAccent"
+        android:layout_marginBottom="30dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="40dp"
+        android:layout_gravity="center|top">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start|center"
+            android:text="Your TOP 3 stations:"
+            android:textColor="@color/colorLightGray"
+            android:fontFamily="sans-serif-light"
+            android:textSize="18sp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="0dp"
+            android:layout_gravity="start">
+
+            <TextView
+                android:id="@+id/top1Name"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="start|center"
+                android:textStyle="bold"
+                android:text="Strašnická "
+                android:textColor="@color/colorAccent"
+                android:fontFamily="sans-serif-light"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/visitsText1"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="end|center"
+                android:text="Visits: "
+                android:textColor="@color/colorLightGray"
+                android:fontFamily="sans-serif-light"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/top1Visits"
+                android:layout_width="wrap_content"
+                android:layout_weight="0"
+                android:layout_marginLeft="10dp"
+                android:layout_height="match_parent"
+                android:gravity="end|center"
+                android:textStyle="bold"
+                android:text="304"
+                android:textColor="@color/colorAccent"
+                android:fontFamily="sans-serif-light"
+                android:textSize="22sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="0dp"
+            android:layout_gravity="start">
+
+            <TextView
+                android:id="@+id/top2Name"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="start|center"
+                android:textStyle="bold"
+                android:text="Náměstí republiky"
+                android:textColor="@color/colorAccent"
+                android:fontFamily="sans-serif-light"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/visitsText1111111"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="end|center"
+                android:text="Visits: "
+                android:textColor="@color/colorLightGray"
+                android:fontFamily="sans-serif-light"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/top2Visits"
+                android:layout_width="wrap_content"
+                android:layout_weight="0"
+                android:layout_marginLeft="10dp"
+                android:layout_height="match_parent"
+                android:gravity="end|center"
+                android:textStyle="bold"
+                android:text="121"
+                android:textColor="@color/colorAccent"
+                android:fontFamily="sans-serif-light"
+                android:textSize="22sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="0dp"
+            android:layout_gravity="start">
+
+            <TextView
+                android:id="@+id/top3Name"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="start|center"
+                android:textStyle="bold"
+                android:text="Smíchovské nádraží "
+                android:textColor="@color/colorAccent"
+                android:fontFamily="sans-serif-light"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/visitsText22222"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="start|center"
+                android:text="Visits: "
+                android:textColor="@color/colorLightGray"
+                android:fontFamily="sans-serif-light"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/top3Visits"
+                android:layout_width="wrap_content"
+                android:layout_weight="0"
+                android:layout_marginLeft="10dp"
+                android:layout_height="match_parent"
+                android:gravity="end|center"
+                android:textStyle="bold"
+                android:text="24"
+                android:textColor="@color/colorAccent"
+                android:fontFamily="sans-serif-light"
+                android:textSize="22sp"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="50dp"
+            android:layout_marginHorizontal="0dp"
+            android:layout_gravity="end">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="start|center"
+                android:text="Your TOP line:"
+                android:layout_marginRight="120dp"
+                android:textColor="@color/colorLightGray"
+                android:fontFamily="sans-serif-light"
+                android:textSize="18sp"/>
+
+            <androidx.constraintlayout.utils.widget.ImageFilterView
+                android:id="@+id/topLineImageView"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:src="@drawable/metroc" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginHorizontal="40dp"
+        android:layout_gravity="bottom">
+
+        <Button
+            android:id="@+id/understoodStatsButton"
+            android:layout_gravity="bottom"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorAccent"
+            android:text="Understood"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-light"
+            android:textSize="@dimen/completeDimensionStats"
+            android:textColor="@color/colorPrimaryDark" />
+    </LinearLayout>
+
+</LinearLayout>
