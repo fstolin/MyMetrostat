@@ -129,8 +129,6 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
         // Checking for the location when entering the text field
         startStationSearchView.setOnQueryTextFocusChangeListener{_, _ ->
             if (!alreadySelectedFrom) hideToshowRecycle()
-            selectFrom = true
-            selectTo = false
             requestUserLocationData()
         }
 
@@ -351,11 +349,8 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
                 }
             }
 
-            // Empty result
-
-                filteredList = ArrayList(filteredList.sortedBy { it.distance })
-                adapter.updateStationList(filteredList)
-
+            filteredList = ArrayList(filteredList.sortedBy { it.distance })
+            adapter.updateStationList(filteredList)
         }
     }
 
@@ -393,6 +388,7 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
         // Hiding recyclerView & searchview
         //binding?.stationRecycleView?.visibility = View.INVISIBLE
         selectFrom = false
+        selectTo = true
         alreadySelectedFrom = true
 
         // Showing the new UI
