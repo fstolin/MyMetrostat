@@ -10,6 +10,7 @@ class Utils {
     companion object {
 
         var journeyId: Long = 0
+        var mainView: View? = null
 
         // shows a dismissable Snackbar
         fun showDSnack(str: String, view: View){
@@ -18,7 +19,7 @@ class Utils {
             snack.show()
         }
 
-        private fun getLineDrawable(char: Char): Int {
+        fun getLineDrawable(char: Char): Int {
             if (char == 'B') return R.drawable.metrob
             if (char == 'C') return R.drawable.metroc
             return R.drawable.metroa

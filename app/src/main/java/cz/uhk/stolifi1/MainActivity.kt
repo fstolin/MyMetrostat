@@ -12,6 +12,7 @@ import cz.uhk.stolifi1.database.MetroStationDAO
 import cz.uhk.stolifi1.database.MetroStationEntity
 import cz.uhk.stolifi1.databinding.ActivityMainBinding
 import cz.uhk.stolifi1.journey.JourneyActivity
+import cz.uhk.stolifi1.miscActivities.StatsActivity
 import cz.uhk.stolifi1.stations.Stations
 import cz.uhk.stolifi1.stations.Stop
 import cz.uhk.stolifi1.utils.APIInterface
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding?.root)
         // View for Snackbars etc
         snackView = findViewById(R.id.mainPageLinearLayout)
+        Utils.mainView = snackView
 
         // Start button listener
         binding?.startButton?.setOnClickListener { startButton() }
@@ -58,10 +60,6 @@ class MainActivity : AppCompatActivity() {
         // TODO only download JSON & update databse when neccesary - once a week - or when requested maybe when the file was changed
         // JSON async request
         getJSONDataAsync()
-
-
-        // Hide buttons (code to remember)
-        //binding?.statsButton?.visibility = View.INVISIBLE
     }
 
     private fun getJSONDataAsync() = runBlocking{
@@ -115,7 +113,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun statsButton() {
-        Utils.showDSnack("Your stats", snackView)
+        val intent = Intent(this, StatsActivity::class.java)
+        startActivity(intent)
     }
 
     // Suspended function to use the DAO
