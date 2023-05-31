@@ -35,6 +35,11 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
     // Location variables
     private var userLat: Double = 0.0
     private var userLon: Double = 0.0
+    // Workflow variables
+    private var selectFrom = false
+    private var selectTo = false
+    private var fromStationId = 0
+    private var toStationId = 0
 
     // Location fused client
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
@@ -112,11 +117,12 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
         // Start station text filtering the list
         startStationSearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
-                TODO("Not yet implemented")
+                return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 filterList(newText)
+                selectFrom = true
                 return true
             }
 
@@ -207,7 +213,7 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
             station.distance = calculateDistance(station)
         }
         stationlist = ArrayList(stationlist.sortedBy { it.distance })
-        adapter.updateStationList(stationlist)
+        adapter.updateStationListDistanceOnly(stationlist)
     }
 
     // filters a list based on the new string. Sort by distance
@@ -230,7 +236,7 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
 
     // on stationList item click -> select it
     override fun onItemClick(position: Int) {
-        val clickedItem : ListStation = stationlist[position]
+        val clickedItem : ListStation = adapter.stationList[position]
         Utils.showDSnack("#### Item $position name: ${clickedItem.name}", snackView)
     }
 

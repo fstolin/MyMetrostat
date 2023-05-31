@@ -1,7 +1,5 @@
 package cz.uhk.stolifi1.utils
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,7 +46,6 @@ class StationAdapter (var stationList: List<ListStation>, private var listener: 
         // check the line
         var transfer = false
         val line = stationList[position].line
-        Log.i(TAG, "${stationList[position].name}: $line")
         var lineInt = R.drawable.metroa
         //default
         var lineInt2 = R.drawable.metroa
@@ -111,6 +108,16 @@ class StationAdapter (var stationList: List<ListStation>, private var listener: 
 
     fun updateStationList(list: List<ListStation>){
         this.stationList = list
+        notifyDataSetChanged()
+    }
+
+    fun updateStationListDistanceOnly(list: List<ListStation>){
+        for (station in this.stationList){
+            for (listStation in list){
+                if (station.dbId == listStation.dbId) station.distance = listStation.distance
+            }
+        }
+        this.stationList = ArrayList(this.stationList.sortedBy { it.distance })
         notifyDataSetChanged()
     }
 
