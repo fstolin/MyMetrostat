@@ -9,6 +9,8 @@ class Utils {
 
     companion object {
 
+        var journeyId: Long = 0
+
         // shows a dismissable Snackbar
         fun showDSnack(str: String, view: View){
                 val snack = Snackbar.make(view,str, Snackbar.LENGTH_SHORT)

@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 // List our entities
-@Database(entities = [MetroStationEntity::class, JourneysEntity::class, inProressJourneyEntity::class], version = 4)
+@Database(entities = [MetroStationEntity::class, JourneysEntity::class, inProressJourneyEntity::class], version = 5)
 abstract class MetroStationDatabase : RoomDatabase() {
 
     // Entity DAOs

@@ -12,7 +12,7 @@ interface JourneyDAO {
 
     // Suspend - can't be done on the main thread
     @Insert
-    suspend fun insert(journeysEntity: JourneysEntity)
+    suspend fun insert(journeysEntity: JourneysEntity): Long
 
     @Update
     suspend fun update(journeysEntity: JourneysEntity)

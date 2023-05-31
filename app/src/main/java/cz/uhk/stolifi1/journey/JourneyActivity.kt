@@ -228,15 +228,19 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
             // Create new Journey object & populate it
             val stationDistance = calculateDistanceBetweenStations(fromStation!!, endStation!!)
             val journeyCO2 = calculateCO2(stationDistance)
+            var journeyId: Long = -1
 
-            val journey = JourneysEntity(departStationName = fromStation!!.name, arriveStationName = endStation!!.name, distance = stationDistance, duration = 0, co2saved = journeyCO2)
+            val journey = JourneysEntity(   departStationName = fromStation!!.name, arriveStationName = endStation!!.name,
+                                            distance = stationDistance, duration = 0, co2saved = journeyCO2,
+                                            arriveStationLine = fromStation!!.line, departStationLine = endStation!!.line)
             val myJourneyJob = launch {
-                journeyDAO.insert(journey)
+                journeyId = journeyDAO.insert(journey)
             }
             myJourneyJob.join()
+            Utils.journeyId = journeyId
 
             // Show results screen
-            val intent = Intent(context, JourneyActivity::class.java)
+            val intent = Intent(context, JourneyCompleteActivity::class.java)
             startActivity(intent)
         }
     }
@@ -342,7 +346,7 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
         if (newText != null) {
             var filteredList = ArrayList<ListStation>()
             for (station in stationlist) {
-                if (station.name.lowercase(Locale.ROOT).contains(newText)){
+                if (station.name.lowercase(Locale.ROOT).contains(newText.lowercase())){
                     filteredList.add(station)
                 }
             }
@@ -393,7 +397,9 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
 
         // Showing the new UI
         binding?.toStationLinearLayout?.visibility = View.VISIBLE
+        binding?.startSearchView?.visibility = View.GONE
         hideKeyboard(snackView)
+        adapter.stationList = stationlist
     }
 
     private fun addItemEndStation(position: Int) {

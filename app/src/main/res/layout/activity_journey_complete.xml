@@ -64,7 +64,7 @@
             android:text="Distance traveled:"
             android:textColor="@color/colorLightGray"
             android:fontFamily="sans-serif-light"
-            android:textSize="@dimen/completeDimensionStats"/>
+            android:textSize="22sp"/>
 
         <TextView
             android:id="@+id/completeDistanceText"
@@ -94,7 +94,7 @@
             android:text="CO2 emissions saved:"
             android:textColor="@color/colorLightGray"
             android:fontFamily="sans-serif-light"
-            android:textSize="@dimen/completeDimensionStats"/>
+            android:textSize="22sp"/>
 
         <TextView
             android:id="@+id/completeCO2Text"
@@ -103,7 +103,7 @@
             android:layout_height="match_parent"
             android:gravity="end|center"
             android:textStyle="bold"
-            android:text="1045m"
+            android:text="1045 kg"
             android:textColor="@color/colorAccent"
             android:fontFamily="sans-serif-light"
             android:textSize="@dimen/completeDimensionStats"/>
@@ -126,6 +126,7 @@
             android:layout_marginBottom="30dp"/>
 
         <Button
+            android:id="@+id/completeCoolButton"
             android:layout_gravity="bottom"
             android:gravity="center"
             android:layout_width="match_parent"
