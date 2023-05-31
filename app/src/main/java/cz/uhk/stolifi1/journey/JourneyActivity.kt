@@ -196,7 +196,7 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
         // Train CO2 per 1 km [kg]
         var trainCO2 = 0.37 / 10
 
-        return ((carCO2 - trainCO2) * stationDistance)
+        return ((carCO2 - trainCO2) * (stationDistance / 1000))
     }
 
     // Finished journey -> save all the data to the database
@@ -226,10 +226,10 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
             updateJob.join()
 
             // Create new Journey object & populate it
-            var stationDistance = calculateDistanceBetweenStations(fromStation!!, endStation!!)
-            var journeyCO2 = calculateCO2(stationDistance)
+            val stationDistance = calculateDistanceBetweenStations(fromStation!!, endStation!!)
+            val journeyCO2 = calculateCO2(stationDistance)
 
-            var journey = JourneysEntity(departStationName = fromStation!!.name, arriveStationName = endStation!!.name, distance = stationDistance, duration = 0, co2saved = journeyCO2)
+            val journey = JourneysEntity(departStationName = fromStation!!.name, arriveStationName = endStation!!.name, distance = stationDistance, duration = 0, co2saved = journeyCO2)
             val myJourneyJob = launch {
                 journeyDAO.insert(journey)
             }
@@ -292,11 +292,11 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
 
     // Calculates distance between the user and the station
     private fun calculateDistance(station: MetroStationEntity): Double {
-        var stationLoc: Location = Location("station location")
+        val stationLoc: Location = Location("station location")
         stationLoc.latitude = station.lat
         stationLoc.longitude = station.lon
 
-        var userLoc: Location = Location("user location")
+        val userLoc: Location = Location("user location")
         userLoc.latitude = userLat
         userLoc.longitude = userLon
 
@@ -304,11 +304,11 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
     }
 
     private fun calculateDistanceBetweenStations(station: MetroStationEntity, endStation: MetroStationEntity): Double {
-        var stationLoc: Location = Location("station location")
+        val stationLoc: Location = Location("station location")
         stationLoc.latitude = station.lat
         stationLoc.longitude = station.lon
 
-        var endStationLoc: Location = Location("end station location")
+        val endStationLoc: Location = Location("end station location")
         endStationLoc.latitude = endStation.lat
         endStationLoc.longitude = endStation.lon
 

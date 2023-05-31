@@ -26,4 +26,7 @@ interface JourneyDAO {
     @Query("SELECT * FROM `journeys-table` WHERE id=:id")
     fun fetchJourneyById(id: Int): Flow<JourneysEntity>
 
+    @Query("DELETE FROM `journeys-table` WHERE id > 0")
+    fun deleteAllJourneys()
+
 }
