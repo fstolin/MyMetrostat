@@ -10,17 +10,32 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import cz.uhk.stolifi1.R
 
-class StationAdapter (var stationList: List<ListStation>) : RecyclerView.Adapter<StationAdapter.StationViewHolder>(){
-    inner class StationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class StationAdapter (var stationList: List<ListStation>, private var listener: OnItemClickListener) : RecyclerView.Adapter<StationAdapter.StationViewHolder>(){
+    inner class StationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         val logo: ImageView = itemView.findViewById(R.id.lineIcon)
         val logo2: ImageView = itemView.findViewById(R.id.lineIcon2)
         val titleText: TextView = itemView.findViewById(R.id.stationName)
         val distance: TextView = itemView.findViewById(R.id.stationDistance)
+
+        // Item on click listeners in init
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        // On click function
+        override fun onClick(v: View?) {
+            val position: Int = adapterPosition
+            // is position valid
+            if (position != RecyclerView.NO_POSITION) {
+                listener.onItemClick(position)
+            }
+        }
     }
 
     // Creating the recyclerView
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StationViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.station_list_layout, parent, false)
+
 
         return StationViewHolder(view)
     }
@@ -99,4 +114,7 @@ class StationAdapter (var stationList: List<ListStation>) : RecyclerView.Adapter
         notifyDataSetChanged()
     }
 
+    interface OnItemClickListener {
+        fun onItemClick(position: Int)
+    }
 }

@@ -23,12 +23,13 @@ import cz.uhk.stolifi1.databinding.ActivityJourneyBinding
 import cz.uhk.stolifi1.utils.ListStation
 import cz.uhk.stolifi1.utils.PermissionUtils
 import cz.uhk.stolifi1.utils.StationAdapter
+import cz.uhk.stolifi1.utils.Utils
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.Locale
 
-class JourneyActivity : AppCompatActivity() {
+class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener {
 
     private var binding: ActivityJourneyBinding? = null
     // Location variables
@@ -96,7 +97,7 @@ class JourneyActivity : AppCompatActivity() {
         addStationData()
 
         // Adapter
-        adapter = StationAdapter(stationlist)
+        adapter = StationAdapter(stationlist, this)
         recyclerView.adapter = adapter
 
         // Clicking on the start station list
@@ -225,6 +226,12 @@ class JourneyActivity : AppCompatActivity() {
                 adapter.updateStationList(filteredList)
             }
         }
+    }
+
+    // on stationList item click -> select it
+    override fun onItemClick(position: Int) {
+        val clickedItem : ListStation = stationlist[position]
+        Utils.showDSnack("#### Item $position name: ${clickedItem.name}", snackView)
     }
 
 }

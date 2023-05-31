@@ -176,6 +176,7 @@ class MainActivity : AppCompatActivity() {
         if (stop.altIdosName == "Muzeum") return "CA"
         if (stop.altIdosName == "Můstek") return "AB"
         if (stop.altIdosName == "Florenc") return "CB"
+        if (stop.altIdosName == "Zličín") return "B"
 
         // Other stations
         var sb = StringBuilder()
