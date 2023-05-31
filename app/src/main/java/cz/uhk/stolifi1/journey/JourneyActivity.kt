@@ -1,13 +1,16 @@
 package cz.uhk.stolifi1.journey
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -95,6 +98,8 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
         // Hide unnecessary UI
         binding?.toStationLinearLayout?.visibility = View.GONE
         binding?.startStationImage?.root?.visibility = View.GONE
+        binding?.endStationImage?.root?.visibility = View.GONE
+        binding?.finishButton?.visibility = View.GONE
 
         // Buttons
         binding?.finishButton?.setOnClickListener {
@@ -123,6 +128,7 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
         startStationSearchView.setOnQueryTextFocusChangeListener{_, _ ->
             if (!alreadySelectedFrom) hideToshowRecycle()
             selectFrom = true
+            selectTo = false
             requestUserLocationData()
         }
 
@@ -149,7 +155,10 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
 
         // Checking for the location when entering the text field
         endStationSearchView.setOnQueryTextFocusChangeListener{_, _ ->
-            toSearchStartAgain()
+            if (!alreadySelectedTo) binding?.stationRecycleView?.visibility = View.VISIBLE
+            startStationSearchView.visibility = View.GONE
+            selectTo = true
+            selectFrom = false
         }
 
         // End station text filtering the list
@@ -277,34 +286,73 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
     override fun onItemClick(position: Int) {
         // Selecting the first station
         if (selectFrom) {
-            // Selecting clicked station, assigning its id
-            val clickedItem: ListStation = adapter.stationList[position]
-            fromStationId = clickedItem.dbId
-
-            // Showing & editing UI
-            binding?.startStationImage?.root?.visibility = View.VISIBLE
-            binding?.startStationImage?.stationName?.text = clickedItem.name
-            binding?.startStationImage?.stationDistance?.visibility = View.INVISIBLE
-
-            // Lines
-            var lineList = Utils.getLineDrawablesTransfer(clickedItem.line)
-            Log.i(TAG, "####$lineList")
-            binding?.startStationImage?.lineIcon?.setImageResource(lineList[0])
-            if (lineList.size > 1) {
-                binding?.startStationImage?.lineIcon2?.setImageResource(lineList[1])
-                binding?.startStationImage?.lineIcon2?.visibility = View.VISIBLE
-            } else {
-                binding?.startStationImage?.lineIcon2?.visibility = View.INVISIBLE
-            }
-
-            // Hiding recyclerView & searchview
-            binding?.stationRecycleView?.visibility = View.INVISIBLE
-            selectFrom = false
-            alreadySelectedFrom = true
-
-            // Showing the new UI
-            binding?.toStationLinearLayout?.visibility = View.VISIBLE
+            addItemStartStation(position)
+        } else {
+            addItemEndStation(position)
         }
+    }
+
+    private fun addItemStartStation(position: Int) {
+        // Selecting clicked station, assigning its id
+        val clickedItem: ListStation = adapter.stationList[position]
+        fromStationId = clickedItem.dbId
+
+        // Showing & editing UI
+        binding?.startStationImage?.root?.visibility = View.VISIBLE
+        binding?.startStationImage?.stationName?.text = clickedItem.name
+        binding?.startStationImage?.stationDistance?.visibility = View.INVISIBLE
+
+        // Lines
+        var lineList = Utils.getLineDrawablesTransfer(clickedItem.line)
+        Log.i(TAG, "####$lineList")
+        binding?.startStationImage?.lineIcon?.setImageResource(lineList[0])
+        if (lineList.size > 1) {
+            binding?.startStationImage?.lineIcon2?.setImageResource(lineList[1])
+            binding?.startStationImage?.lineIcon2?.visibility = View.VISIBLE
+        } else {
+            binding?.startStationImage?.lineIcon2?.visibility = View.INVISIBLE
+        }
+
+        // Hiding recyclerView & searchview
+        binding?.stationRecycleView?.visibility = View.INVISIBLE
+        selectFrom = false
+        alreadySelectedFrom = true
+
+        // Showing the new UI
+        binding?.toStationLinearLayout?.visibility = View.VISIBLE
+        hideKeyboard(snackView)
+    }
+
+    private fun addItemEndStation(position: Int) {
+        // Selecting clicked station, assigning its id
+        val clickedItem: ListStation = adapter.stationList[position]
+        toStationId = clickedItem.dbId
+
+        // Showing & editing UI
+        binding?.endStationImage?.root?.visibility = View.VISIBLE
+        binding?.endStationImage?.stationName?.text = clickedItem.name
+        binding?.endStationImage?.stationDistance?.visibility = View.INVISIBLE
+
+        // Lines
+        var lineList = Utils.getLineDrawablesTransfer(clickedItem.line)
+        Log.i(TAG, "####$lineList")
+        binding?.endStationImage?.lineIcon?.setImageResource(lineList[0])
+        if (lineList.size > 1) {
+            binding?.endStationImage?.lineIcon2?.setImageResource(lineList[1])
+            binding?.endStationImage?.lineIcon2?.visibility = View.VISIBLE
+        } else {
+            binding?.endStationImage?.lineIcon2?.visibility = View.INVISIBLE
+        }
+
+        // Hiding recyclerView & searchview
+        binding?.stationRecycleView?.visibility = View.GONE
+        selectTo = false
+        alreadySelectedTo = true
+
+        // Showing the new UI
+        binding?.finishButton?.visibility = View.VISIBLE
+        binding?.endSearchView?.visibility = View.GONE
+        hideKeyboard(snackView)
     }
 
     private fun hideToshowRecycle(){
@@ -326,6 +374,11 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
         selectTo = true
         startStationSearchView.visibility = View.GONE
         binding?.stationRecycleView?.visibility = View.VISIBLE
+    }
+
+    fun Context.hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
 }

@@ -40,6 +40,7 @@
             android:layout_height="50dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="20dp"
+            android:layout_marginBottom="15dp"
             android:layout_marginRight="5dp"
             android:src="@drawable/arrow2"
             app:tint="@color/colorPrimary" />
@@ -50,10 +51,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="5dp"
-            android:layout_marginTop="15dp"
             android:layout_marginRight="5dp"
             app:defaultQueryHint="To"
             app:iconifiedByDefault="false" />
+
+        <include
+            layout="@layout/station_list_layout"
+            android:id="@+id/endStationImage"
+            />
 
     </LinearLayout>
 
