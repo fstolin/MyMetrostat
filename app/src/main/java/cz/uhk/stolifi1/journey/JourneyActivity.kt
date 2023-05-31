@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.Intent
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -99,7 +100,7 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
         binding?.toStationLinearLayout?.visibility = View.GONE
         binding?.startStationImage?.root?.visibility = View.GONE
         binding?.endStationImage?.root?.visibility = View.GONE
-        binding?.finishButton?.visibility = View.GONE
+        binding?.buttonLayout?.visibility = View.GONE
 
         // Buttons
         binding?.finishButton?.setOnClickListener {
@@ -175,6 +176,17 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
             }
 
         })
+
+        // Back button
+        binding?.backButton?.setOnClickListener{
+            onBackPressedDispatcher.onBackPressed()
+        }
+
+        // Try again button
+        binding?.againButton?.setOnClickListener{
+            val intent = Intent(this, JourneyActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun finishJourney() {
@@ -350,7 +362,7 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
         alreadySelectedTo = true
 
         // Showing the new UI
-        binding?.finishButton?.visibility = View.VISIBLE
+        binding?.buttonLayout?.visibility = View.VISIBLE
         binding?.endSearchView?.visibility = View.GONE
         hideKeyboard(snackView)
     }

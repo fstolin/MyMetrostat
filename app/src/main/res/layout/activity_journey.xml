@@ -70,20 +70,56 @@
         />
 
     <LinearLayout
+        android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="bottom"
         android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/backButton"
+                android:layout_width="175dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:backgroundTint="@color/colorDarkGray"
+                android:layout_marginTop="8dp"
+                android:text="Back"
+                android:layout_marginEnd="10dp"
+                android:padding="5dp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:elevation="12dp" />
+            <Button
+                android:id="@+id/againButton"
+                android:layout_width="175dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:backgroundTint="@color/colorDarkGray"
+                android:layout_marginTop="8dp"
+                android:text="Start again"
+                android:padding="5dp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:elevation="12dp" />
+
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/finishButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-light"
-            android:backgroundTint="@color/colorPrimaryDark"
+            android:backgroundTint="@color/colorPositive"
             android:layout_marginTop="8dp"
             android:text="@string/confirmButtonString"
-            android:padding="15dp"
+            android:padding="25dp"
             android:layout_marginBottom="20dp"
             android:gravity="center"
             android:textStyle="bold"
