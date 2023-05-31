@@ -23,6 +23,11 @@
         app:defaultQueryHint="From"
         />
 
+    <include
+        layout="@layout/station_list_layout"
+        android:id="@+id/startStationImage" 
+        />
+
     <LinearLayout
         android:id="@+id/toStationLinearLayout"
         android:layout_width="match_parent"

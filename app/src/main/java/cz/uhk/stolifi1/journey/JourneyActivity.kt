@@ -1,11 +1,14 @@
 package cz.uhk.stolifi1.journey
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
+import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,6 +30,7 @@ import cz.uhk.stolifi1.utils.Utils
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.w3c.dom.Text
 import java.util.Locale
 
 class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener {
@@ -36,8 +40,10 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
     private var userLat: Double = 0.0
     private var userLon: Double = 0.0
     // Workflow variables
-    private var selectFrom = false
+    private var selectFrom = true
     private var selectTo = false
+    private var alreadySelectedFrom = false
+    private var alreadySelectedTo = false
     private var fromStationId = 0
     private var toStationId = 0
 
@@ -88,6 +94,7 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
 
         // Hide unnecessary UI
         binding?.toStationLinearLayout?.visibility = View.GONE
+        binding?.startStationImage?.root?.visibility = View.GONE
 
         // Buttons
         binding?.finishButton?.setOnClickListener {
@@ -105,24 +112,56 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
         adapter = StationAdapter(stationlist, this)
         recyclerView.adapter = adapter
 
+        // #### Start Station SEARCH VIEW ####
         // Clicking on the start station list
         startStationSearchView.setOnClickListener {
+            startFromSearchAgain()
             requestUserLocationData()
         }
 
+        // Checking for the location when entering the text field
         startStationSearchView.setOnQueryTextFocusChangeListener{_, _ ->
+            if (!alreadySelectedFrom) hideToshowRecycle()
+            selectFrom = true
             requestUserLocationData()
         }
 
         // Start station text filtering the list
         startStationSearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
+                startFromSearchAgain()
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
+                startFromSearchAgain()
                 filterList(newText)
-                selectFrom = true
+                return true
+            }
+
+        })
+
+        // #### End Station SEARCH VIEW ####
+        // Clicking on the start station list
+       endStationSearchView.setOnClickListener {
+            toSearchStartAgain()
+        }
+
+        // Checking for the location when entering the text field
+        endStationSearchView.setOnQueryTextFocusChangeListener{_, _ ->
+            toSearchStartAgain()
+        }
+
+        // End station text filtering the list
+        endStationSearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                toSearchStartAgain()
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                toSearchStartAgain()
+                filterList(newText)
                 return true
             }
 
@@ -227,17 +266,66 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
             }
 
             // Empty result
-            if (!filteredList.isEmpty()) {
+
                 filteredList = ArrayList(filteredList.sortedBy { it.distance })
                 adapter.updateStationList(filteredList)
-            }
+
         }
     }
 
     // on stationList item click -> select it
     override fun onItemClick(position: Int) {
-        val clickedItem : ListStation = adapter.stationList[position]
-        Utils.showDSnack("#### Item $position name: ${clickedItem.name}", snackView)
+        // Selecting the first station
+        if (selectFrom) {
+            // Selecting clicked station, assigning its id
+            val clickedItem: ListStation = adapter.stationList[position]
+            fromStationId = clickedItem.dbId
+
+            // Showing & editing UI
+            binding?.startStationImage?.root?.visibility = View.VISIBLE
+            binding?.startStationImage?.stationName?.text = clickedItem.name
+            binding?.startStationImage?.stationDistance?.visibility = View.INVISIBLE
+
+            // Lines
+            var lineList = Utils.getLineDrawablesTransfer(clickedItem.line)
+            Log.i(TAG, "####$lineList")
+            binding?.startStationImage?.lineIcon?.setImageResource(lineList[0])
+            if (lineList.size > 1) {
+                binding?.startStationImage?.lineIcon2?.setImageResource(lineList[1])
+                binding?.startStationImage?.lineIcon2?.visibility = View.VISIBLE
+            } else {
+                binding?.startStationImage?.lineIcon2?.visibility = View.INVISIBLE
+            }
+
+            // Hiding recyclerView & searchview
+            binding?.stationRecycleView?.visibility = View.INVISIBLE
+            selectFrom = false
+            alreadySelectedFrom = true
+
+            // Showing the new UI
+            binding?.toStationLinearLayout?.visibility = View.VISIBLE
+        }
+    }
+
+    private fun hideToshowRecycle(){
+        binding?.startStationImage?.root?.visibility = View.GONE
+        binding?.toStationLinearLayout?.visibility = View.GONE
+        binding?.stationRecycleView?.visibility = View.VISIBLE
+    }
+
+    // Start again the search from the start button
+    private fun startFromSearchAgain() {
+        hideToshowRecycle()
+        selectFrom = true
+        selectTo = false
+    }
+
+    // Start again the search to the final station
+    private fun toSearchStartAgain(){
+        selectFrom = false
+        selectTo = true
+        startStationSearchView.visibility = View.GONE
+        binding?.stationRecycleView?.visibility = View.VISIBLE
     }
 
 }
