@@ -16,6 +16,5 @@ data class JourneysEntity (
     val distance: Double,
     val duration: Int,
     val co2saved: Double,
-    val co2savedPercentage: Double
 
 )

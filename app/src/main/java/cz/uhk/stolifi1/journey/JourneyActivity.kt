@@ -12,7 +12,6 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +22,7 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import cz.uhk.stolifi1.R
 import cz.uhk.stolifi1.database.JourneyDAO
+import cz.uhk.stolifi1.database.JourneysEntity
 import cz.uhk.stolifi1.database.MetroStationApp
 import cz.uhk.stolifi1.database.MetroStationDAO
 import cz.uhk.stolifi1.database.MetroStationEntity
@@ -34,7 +34,6 @@ import cz.uhk.stolifi1.utils.Utils
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.w3c.dom.Text
 import java.util.Locale
 
 class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener {
@@ -67,6 +66,7 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
     private lateinit var endStationSearchView: SearchView
     // Adapter
     private lateinit var adapter: StationAdapter
+    private lateinit var context: Context
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,6 +78,7 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
 
         // Snackbar view
         snackView = findViewById(R.id.journeyActivityMainView)
+        context = this
 
         // Recycler + search Views
         recyclerView = findViewById(R.id.stationRecycleView)
@@ -189,9 +190,57 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
         }
     }
 
-    private fun finishJourney() {
-        TODO("Not yet implemented")
+    private fun calculateCO2(stationDistance: Double): Double {
+        // CO2 per 1 km - average car [kg]
+        var carCO2 = 2.845 / 10
+        // Train CO2 per 1 km [kg]
+        var trainCO2 = 0.37 / 10
+
+        return ((carCO2 - trainCO2) * stationDistance)
     }
+
+    // Finished journey -> save all the data to the database
+    private fun finishJourney() = runBlocking {
+        var fromStation: MetroStationEntity? = null
+        var endStation: MetroStationEntity? = null
+
+        // Get the stations from db
+        val fetchJob = launch {
+            fromStation = metroStationDAO.fetchMetroStationById(fromStationId).first()
+            endStation = metroStationDAO.fetchMetroStationById(toStationId).first()
+        }
+        fetchJob.join()
+
+        // Check if successful
+        if (fromStation == null || endStation == null) {
+            Log.i(TAG, "##### accesing stations failed. $fromStationId to $toStationId")
+        } else {
+
+            // Update stations arrivals & departure counts in database
+            fromStation!!.departureCount += 1
+            endStation!!.arrivalCount += 1
+            val updateJob = launch {
+                metroStationDAO.update(fromStation!!)
+                metroStationDAO.update(endStation!!)
+            }
+            updateJob.join()
+
+            // Create new Journey object & populate it
+            var stationDistance = calculateDistanceBetweenStations(fromStation!!, endStation!!)
+            var journeyCO2 = calculateCO2(stationDistance)
+
+            var journey = JourneysEntity(departStationName = fromStation!!.name, arriveStationName = endStation!!.name, distance = stationDistance, duration = 0, co2saved = journeyCO2)
+            val myJourneyJob = launch {
+                journeyDAO.insert(journey)
+            }
+            myJourneyJob.join()
+
+            // Show results screen
+            val intent = Intent(context, JourneyActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
 
     // Location callback
     private val mLocationCallback = object : LocationCallback(){
@@ -252,6 +301,18 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
         userLoc.longitude = userLon
 
         return stationLoc.distanceTo(userLoc).toDouble()
+    }
+
+    private fun calculateDistanceBetweenStations(station: MetroStationEntity, endStation: MetroStationEntity): Double {
+        var stationLoc: Location = Location("station location")
+        stationLoc.latitude = station.lat
+        stationLoc.longitude = station.lon
+
+        var endStationLoc: Location = Location("end station location")
+        endStationLoc.latitude = endStation.lat
+        endStationLoc.longitude = endStation.lon
+
+        return stationLoc.distanceTo(endStationLoc).toDouble()
     }
 
     // Calculates distance between the user and the station
@@ -326,7 +387,7 @@ class JourneyActivity : AppCompatActivity(), StationAdapter.OnItemClickListener 
         }
 
         // Hiding recyclerView & searchview
-        binding?.stationRecycleView?.visibility = View.INVISIBLE
+        //binding?.stationRecycleView?.visibility = View.INVISIBLE
         selectFrom = false
         alreadySelectedFrom = true
 

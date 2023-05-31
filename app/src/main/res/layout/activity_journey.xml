@@ -94,7 +94,7 @@
                 android:padding="5dp"
                 android:gravity="center"
                 android:textStyle="bold"
-                android:elevation="12dp" />
+                android:elevation="20dp" />
             <Button
                 android:id="@+id/againButton"
                 android:layout_width="175dp"
@@ -106,7 +106,7 @@
                 android:padding="5dp"
                 android:gravity="center"
                 android:textStyle="bold"
-                android:elevation="12dp" />
+                android:elevation="20dp" />
 
 
         </LinearLayout>

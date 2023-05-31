@@ -13,7 +13,7 @@ data class MetroStationEntity (
     val line: String = "",
     val lat: Double = 0.0,
     val lon: Double = 0.0,
-    val arrivalCount: Int = 0,
-    val departureCount: Int = 0
+    var arrivalCount: Int = 0,
+    var departureCount: Int = 0
 
 )
