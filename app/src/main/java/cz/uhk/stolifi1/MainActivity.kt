@@ -57,8 +57,12 @@ class MainActivity : AppCompatActivity() {
         metroStationDAO =  (application as MetroStationApp).db.metroStationDao()
         journeyDAO = (application as MetroStationApp).db.journeysDao()
 
-        // JSON async request
-        getJSONDataAsync()
+        // Only run on the first start
+        if (Utils.firstStart) {
+            // JSON async request
+            getJSONDataAsync()
+            Utils.firstStart = false
+        }
     }
 
     private fun getJSONDataAsync() = runBlocking{

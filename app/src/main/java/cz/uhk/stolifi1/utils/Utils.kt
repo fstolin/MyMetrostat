@@ -11,6 +11,7 @@ class Utils {
 
         var journeyId: Long = 0
         var mainView: View? = null
+        var firstStart: Boolean = true
 
         // shows a dismissable Snackbar
         fun showDSnack(str: String, view: View){
