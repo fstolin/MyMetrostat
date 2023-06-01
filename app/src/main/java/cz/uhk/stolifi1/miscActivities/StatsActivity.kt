@@ -1,7 +1,9 @@
 package cz.uhk.stolifi1.miscActivities
 
+import android.content.ContentValues.TAG
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import cz.uhk.stolifi1.R
 import cz.uhk.stolifi1.database.JourneyDAO
@@ -124,6 +126,7 @@ class StatsActivity : AppCompatActivity() {
             // Stations
             topStations = ArrayList (topStations.sortedBy { it.count })
             topStations.reverse()
+            Log.i(TAG, topStations.toString())
             binding?.top1Name?.text = topStations[0].name
             binding?.top1Visits?.text= topStations[0].count.toString()
             binding?.top2Name?.text = topStations[1].name

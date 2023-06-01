@@ -57,7 +57,6 @@ class MainActivity : AppCompatActivity() {
         metroStationDAO =  (application as MetroStationApp).db.metroStationDao()
         journeyDAO = (application as MetroStationApp).db.journeysDao()
 
-        // TODO only download JSON & update databse when neccesary - once a week - or when requested maybe when the file was changed
         // JSON async request
         getJSONDataAsync()
     }
@@ -67,6 +66,7 @@ class MainActivity : AppCompatActivity() {
             getJSONData()
         }
         job.join()
+        createStationsData()
         //Log.i(TAG, "My metro stations: $metroStationList")
     }
 
